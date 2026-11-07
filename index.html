@@ -1,1 +1,78 @@
-hi
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing Ball</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        canvas {
+            background-color: #2f3640; /* 직사각형 배경 색상 */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="600" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 공의 초기 상태 및 속성 정의
+        const ball = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            radius: 15,
+            dx: 5, // x축 이동 속도 (숫자를 키우면 빨라집니다)
+            dy: 4, // y축 이동 속도
+            color: '#e84118'
+        };
+
+        // 공을 화면에 그리는 함수
+        function drawBall() {
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fillStyle = ball.color;
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        // 매 프레임마다 화면을 갱신하는 함수
+        function update() {
+            // 이전 프레임의 그림 지우기
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawBall();
+
+            // 왼쪽 또는 오른쪽 벽에 부딪혔을 때 x축 방향 반전
+            if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
+                ball.dx = -ball.dx;
+            }
+            
+            // 위쪽 또는 아래쪽 벽에 부딪혔을 때 y축 방향 반전
+            if (ball.y + ball.dy > canvas.height - ball.radius || ball.y + ball.dy < ball.radius) {
+                ball.dy = -ball.dy;
+            }
+
+            // 공의 좌표 업데이트
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
+            // 브라우저에 다음 애니메이션 프레임 요청
+            requestAnimationFrame(update);
+        }
+
+        // 애니메이션 시작
+        update();
+    </script>
+</body>
+</html>
